@@ -27,7 +27,7 @@ jobs:
         run: |
           Write-Host "Container is called **$env:CONTAINERNAME**";
           $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country nl;
-          $Credential = [PSCredential]::new("$env:USERNAME", (ConvertTo-SecureString "env:$PASSWORD" -AsPlainText -Force));
+          $Credential = [PSCredential]::new("$env:USERNAME", (ConvertTo-SecureString "$env:PASSWORD" -AsPlainText -Force));
           New-BcContainer -accept_eula -accept_outdated -containerName "$env:CONTAINERNAME" -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
 
       - name: Download symbols
