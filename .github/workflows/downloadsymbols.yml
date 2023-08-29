@@ -7,9 +7,9 @@ on:
   workflow_dispatch:
 
 env:
-  CONTAINERNAME: roy
-  USERNAME: admin
-  PASSWORD: admin
+  CONTAINERNAME: 'roy'
+  USERNAME: 'admin'
+  PASSWORD: 'admin'
 
 jobs:
   run:
