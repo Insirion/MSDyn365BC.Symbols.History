@@ -25,6 +25,7 @@ jobs:
       - name: Create container
         shell: pwsh
         run: |
+          Write-Host "Container is called **$CONTAINERNAME**";
           $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country nl;
           $Credential = [PSCredential]::new('$USERNAME', (ConvertTo-SecureString '$PASSWORD' -AsPlainText -Force));
           New-BcContainer -accept_eula -accept_outdated -containerName '$CONTAINERNAME' -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
