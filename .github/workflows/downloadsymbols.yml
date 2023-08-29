@@ -16,3 +16,10 @@ jobs:
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module BCContainerHelper
+
+      - name: Create container
+        shell: pwsh
+        run: |
+          $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country nl;
+          $Credential = [PSCredential]::new('admin', (ConvertTo-SecureString 'admin' -AsPlainText -Force));
+          New-BcContainer -accept_eula -accept_outdated -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
