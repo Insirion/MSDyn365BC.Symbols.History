@@ -26,11 +26,18 @@ jobs:
         shell: pwsh
         run: |
           $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country nl;
-          $Credential = [PSCredential]::new($USERNAME, (ConvertTo-SecureString $PASSWORD -AsPlainText -Force));
-          New-BcContainer -accept_eula -accept_outdated -containerName $CONTAINERNAME -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
+          $Credential = [PSCredential]::new('$USERNAME', (ConvertTo-SecureString '$PASSWORD' -AsPlainText -Force));
+          New-BcContainer -accept_eula -accept_outdated -containerName '$CONTAINERNAME' -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
 
       - name: Download symbols
         shell: pwsh
         run: |
-          $Credential = [PSCredential]::new($USERNAME, (ConvertTo-SecureString $PASSWORD -AsPlainText -Force));
-          Get-BCContainerApp -containerName $CONTAINERNAME -appName 'Base Application' -credential $Credential
+          $Credential = [PSCredential]::new('$USERNAME', (ConvertTo-SecureString '$PASSWORD' -AsPlainText -Force));
+          Get-BCContainerApp -containerName '$CONTAINERNAME' -appName 'Base Application' -credential $Credential -appFile './BaseApplication.App'
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Symbols
+          path: |
+            ./BaseApplication.app
