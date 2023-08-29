@@ -33,7 +33,7 @@ jobs:
       - name: Download symbols
         shell: pwsh
         run: |
-          $Credential = [PSCredential]::new("env:$USERNAME", (ConvertTo-SecureString "$env:PASSWORD" -AsPlainText -Force));
+          $Credential = [PSCredential]::new("$env:$USERNAME", (ConvertTo-SecureString "$env:PASSWORD" -AsPlainText -Force));
           Get-BCContainerApp -containerName "$env:CONTAINERNAME" -appName 'Base Application' -credential $Credential -appFile './BaseApplication.App'
 
       - name: Archive production artifacts
