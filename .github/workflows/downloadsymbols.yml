@@ -6,6 +6,11 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  CONTAINERNAME: roy
+  USERNAME: admin
+  PASSWORD: admin
+
 jobs:
   run:
     runs-on: windows-latest
@@ -21,5 +26,11 @@ jobs:
         shell: pwsh
         run: |
           $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country nl;
-          $Credential = [PSCredential]::new('admin', (ConvertTo-SecureString 'admin' -AsPlainText -Force));
-          New-BcContainer -accept_eula -accept_outdated -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
+          $Credential = [PSCredential]::new($USERNAME, (ConvertTo-SecureString $PASSWORD -AsPlainText -Force));
+          New-BcContainer -accept_eula -accept_outdated -containerName $CONTAINERNAME -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
+
+      - name: Download symbols
+        shell: pwsh
+        run: |
+          $Credential = [PSCredential]::new($USERNAME, (ConvertTo-SecureString $PASSWORD -AsPlainText -Force));
+          Get-BCContainerApp -containerName $CONTAINERNAME -appName 'Base Application' -credential $Credential
