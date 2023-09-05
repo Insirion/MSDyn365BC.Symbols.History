@@ -16,6 +16,21 @@ jobs:
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module BCContainerHelper
+
+      - name: Cache Module
+        id: myCache
+        uses: actions/cache@v2
+        with:
+          path: c:\users\runneradmin\documents\windowspowershell\modules\bccontainerhelper
+          key: ${{ runner.os }}-bccontainerhelper-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-bccontainerhelper-
+          
+      - name: Install BCContainerHelper
+        if: steps.myCache.outputs.cache-hit != 'true'
+        run: |
+          Set-PSRepository PSGallery -InstallationPolicy Trusted
+          Install-Module BCContainerHelper
       
       - name: Get artifact url
         shell: pwsh
