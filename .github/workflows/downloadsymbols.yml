@@ -6,11 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  CONTAINERNAME: 'roy'
-  USERNAME: 'admin'
-  PASSWORD: 'admin'
-
 jobs:
   run:
     runs-on: windows-latest
@@ -21,24 +16,19 @@ jobs:
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module BCContainerHelper
-
-      - name: Create container
+      
+      - name: Get artifact url
         shell: pwsh
         run: |
-          Write-Host "Container is called **$env:CONTAINERNAME**";
           $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country nl;
-          $Credential = [PSCredential]::new("$env:USERNAME", (ConvertTo-SecureString "$env:PASSWORD" -AsPlainText -Force));
-          New-BcContainer -accept_eula -accept_outdated -containerName "$env:CONTAINERNAME" -auth NavUserPassword -credential $Credential -artifactUrl $artifactUrl -shortcuts None -useBestContainerOS -updateHosts;
-
-      - name: Download symbols
-        shell: pwsh
-        run: |
-          $Credential = [PSCredential]::new("$env:USERNAME", (ConvertTo-SecureString "$env:PASSWORD" -AsPlainText -Force));
-          Get-BCContainerApp -containerName "$env:CONTAINERNAME" -appName 'Base Application' -credential $Credential -appFile './BaseApplication.App'
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+          echo "##vso[task.setvariable variable=ARTIFACTURL]$ArtifactUrl"
+          $GetArtifacts = Download-Artifacts $ArtifactUrl
+          # Applications.NL\Microsoft_Base Application_22.5.59966.60256.app
+          $SearchString  = "Applications.*\Microsoft_Base Application*.app"
+      
+      - uses: actions/upload-artifact@v3
         with:
-          name: Symbols
+          name: my-artifact
           path: |
-            ./BaseApplication.app
+            c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app
+            c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app
