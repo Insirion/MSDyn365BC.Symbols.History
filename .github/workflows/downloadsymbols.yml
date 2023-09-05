@@ -22,7 +22,7 @@ jobs:
         run: |
           $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country de;
           echo "##vso[task.setvariable variable=ARTIFACTURL]$ArtifactUrl"
-          $GetArtifacts = Download-Artifacts $ArtifactUrl
+          $GetArtifacts = Download-Artifacts $ArtifactUrl -includePlatform
           $SearchString  = "Applications.*\Microsoft_Base Application*.app"
       
       - uses: actions/upload-artifact@v3
@@ -32,3 +32,4 @@ jobs:
             c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app
             c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app
             c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app
+            c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app
