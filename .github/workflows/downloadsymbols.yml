@@ -36,10 +36,10 @@ jobs:
             $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country $_
             Download-Artifacts $ArtifactUrl -includePlatform | Out-Null
 
-            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app' -Destination "./$($_)"  -Force
-            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app' -Destination "./$($_)" -Recurse -Force
-            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app' -Destination "./$($_)" -Recurse -Force
-            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app' -Destination "./$($_)" -Recurse -Force
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app' -Destination "./$($_)" -Container
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app' -Destination "./$($_)" -Container
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app' -Destination "./$($_)" -Container
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app' -Destination "./$($_)" -Container
           }
 
           git add .
