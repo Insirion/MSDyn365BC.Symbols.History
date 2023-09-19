@@ -39,12 +39,30 @@ jobs:
           echo "##vso[task.setvariable variable=ARTIFACTURL]$ArtifactUrl"
           $GetArtifacts = Download-Artifacts $ArtifactUrl -includePlatform
           $SearchString  = "Applications.*\Microsoft_Base Application*.app"
+
+      - name: Copy Files to repository
+        shell: pwsh
+        run: |
+          copy-item -Path c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app -Destination .\ -Recurse -Force
+          copy-item -Path c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app -Destination .\ -Recurse -Force
+          copy-item -Path c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app -Destination .\ -Recurse -Force
+          copy-item -Path c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app -Destination .\ -Recurse -Force
       
-      - uses: actions/upload-artifact@v3
-        with:
-          name: my-artifact
-          path: |
-            c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app
-            c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app
-            c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app
-            c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: my-artifact
+      #     path: |
+      #       c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app
+      #       c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app
+      #       c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app
+      #       c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app
+
+      - name: Commit and push feed
+        shell: bash
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git pull
+          git add .
+          git commit -m "generated" || echo "No changes to commit"
+          git push
