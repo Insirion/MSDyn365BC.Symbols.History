@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Cache Module
         id: myCache
         uses: actions/cache@v2
@@ -22,44 +22,30 @@ jobs:
           key: ${{ runner.os }}-bccontainerhelper-${{ hashFiles('**/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-bccontainerhelper-
-          
+
       - name: Install BCContainerHelper
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module BCContainerHelper
-      
+
       - name: Get artifact url
         shell: pwsh
-        run: |
-          $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country Country;
-          echo "##vso[task.setvariable variable=ARTIFACTURL]$ArtifactUrl"
-          $GetArtifacts = Download-Artifacts $ArtifactUrl -includePlatform
-          $SearchString  = "Applications.*\Microsoft_Base Application*.app"
-
-      - name: Copy Files to repository
-        shell: pwsh
-        run: |
-          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app' -Destination .\  -Force
-          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app' -Destination .\ -Recurse -Force
-          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app' -Destination .\ -Recurse -Force
-          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app' -Destination .\ -Recurse -Force
-      
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: my-artifact
-      #     path: |
-      #       c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app
-      #       c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app
-      #       c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app
-      #       c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app
-
-      - name: Commit and push feed
-        shell: bash
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git pull
+
+          'be', 'de', 'nl' | ForEach-Object {
+            $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country $_
+            Download-Artifacts $ArtifactUrl -includePlatform | Out-Null
+
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app' -Destination "./$($_)"  -Force
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app' -Destination "./$($_)" -Recurse -Force
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app' -Destination "./$($_)" -Recurse -Force
+            Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app' -Destination "./$($_)" -Recurse -Force
+          }
+
           git add .
           git commit -m "generated" || echo "No changes to commit"
           git push
