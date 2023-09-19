@@ -43,10 +43,10 @@ jobs:
       - name: Copy Files to repository
         shell: pwsh
         run: |
-          copy-item -Path c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app -Destination .\ -Recurse -Force
-          copy-item -Path c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app -Destination .\ -Recurse -Force
-          copy-item -Path c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app -Destination .\ -Recurse -Force
-          copy-item -Path c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app -Destination .\ -Recurse -Force
+          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app' -Destination .\ -Recurse -Force
+          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Application*.app' -Destination .\ -Recurse -Force
+          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_System*.app' -Destination .\ -Recurse -Force
+          copy-item -Path 'c:\bcartifacts.cache\sandbox\*\platform\ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app' -Destination .\ -Recurse -Force
       
       # - uses: actions/upload-artifact@v3
       #   with:
