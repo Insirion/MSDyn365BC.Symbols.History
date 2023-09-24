@@ -35,6 +35,7 @@ jobs:
           'be', 'de', 'nl' | ForEach-Object {
             $ArtifactUrl = Get-BCArtifactUrl -type Sandbox -select Latest -Country $_
             Download-Artifacts $ArtifactUrl -includePlatform | Out-Null
+            Remove-Item -Path "./$($_)" -Recurse -Force -ErrorAction SilentlyContinue
             New-Item -Path "./$($_)" -ItemType Directory | Out-Null
 
             Copy-Item -Path 'c:\bcartifacts.cache\sandbox\*\*\Applications.*\Microsoft_Base Application*.app' -Destination "./$($_)"
