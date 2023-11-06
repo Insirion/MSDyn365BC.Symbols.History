@@ -15,7 +15,8 @@ Remove-Variable * -ea 0
 
 # definition for the ZIP archive, the file to be extracted and the checksum:
 $url = 'https://github.com/sshnet/SSH.NET/releases/download/2020.0.1/SSH.NET-2020.0.1-bin.zip'
-$sub = 'net40/Renci.SshNet.dll'
+$url = 'https://bcartifacts.azureedge.net/onprem/19.4.35398.35482/de'
+$sub = 'Applications/BaseApp/Source/Microsoft_Base Application.app'
 $md5 = '5B1AF51340F333CD8A49376B13AFCF9C'
 
 'prepare HTTP client:'
