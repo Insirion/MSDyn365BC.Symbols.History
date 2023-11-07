@@ -14,9 +14,8 @@ cls
 Remove-Variable * -ea 0
 
 # definition for the ZIP archive, the file to be extracted and the checksum:
-$url = 'https://github.com/sshnet/SSH.NET/releases/download/2020.0.1/SSH.NET-2020.0.1-bin.zip'
 $url = 'https://bcartifacts.azureedge.net/onprem/19.4.35398.35482/de'
-$sub = 'Applications/BaseApp/Source/Microsoft_Base Application.app'
+$sub = 'Applications\BaseApp\Source\Microsoft_Base Application.app'
 $md5 = '5B1AF51340F333CD8A49376B13AFCF9C'
 
 'prepare HTTP client:'
@@ -33,7 +32,7 @@ $zip = [byte[]]::new($zipLength)
 $req.Dispose()
 
 'get the last 10k:'
-$start = $zipLength-10kb
+$start = $zipLength-50kb
 $end   = $zipLength-1
 $client.DefaultRequestHeaders.Add('Range', "bytes=$start-$end")
 $result = $client.GetAsync($url).Result
@@ -86,6 +85,11 @@ $stream = [System.IO.Memorystream]::new()
 $stream.Write($zip,0,$zip.Length)
 $archive = [System.IO.Compression.ZipArchive]::new($stream)
 $entry = $archive.GetEntry($sub)
+$entry
+
+
+
+
 $bytes = [byte[]]::new($entry.Length)
 [void]$entry.Open().Read($bytes, 0, $bytes.Length)
 
