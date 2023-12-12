@@ -19,17 +19,23 @@ function Get-BCSymbols
     'Applications\Application\Source\Microsoft_Application.app',
     'Applications\system application\source\Microsoft_System Application.app'
 
+    Write-Verbose 'Download and Extract Base Application, Application and System Application apps'
     Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath $AppFilePaths -Destination $Directory
 
     $TempPath =  [System.IO.Path]::GetTempPath()
-
-    Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath manifest.json -Destination $TempPath
+    Write-Verbose "Using $TempPath as temporary file path"
 
     $ManifestFileName = Join-Path -Path $TempPath -ChildPath manifest.json
+    Write-Verbose "Using manifest $ManifestFileName"
 
-    $Platform = Get-Content -Path $ManifestFileName | ConvertFrom-Json |
+    if (Test-Path -Path $ManifestFileName) { Remove-Item -Path $ManifestFileName -Force }
 
+    Write-Verbose "Extract manifest.json from $ArtifactUrl"
+    Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath manifest.json -Destination $TempPath
 
+    $Platform = Get-Content -Path $ManifestFileName | ConvertFrom-Json | Select-Object -ExpandProperty platform
+    Invoke-WebRequest -Uri https://bcartifacts.azureedge.net/sandbox/$Platform -OutFile (Join-Path -Path $Directory -ChildPath dummy)
+    # Expand-FileFromZipArchive -Uri https://bcartifacts.azureedge.net/sandbox/$Platform
 
 
 
