@@ -33,14 +33,13 @@ function Get-BCSymbols
     Write-Verbose "Extract manifest.json from $ArtifactUrl"
     Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath manifest.json -Destination $TempPath
 
-    $Platform = Get-Content -Path $ManifestFileName | ConvertFrom-Json | Select-Object -ExpandProperty platform
-    Write-Verbose "Using platform $Platform"
+    $Version = Get-Content -Path $ManifestFileName | ConvertFrom-Json | Select-Object -ExpandProperty Version
+    Write-Verbose "Using platform $Version"
 
-    $PlatformUrl = "https://bcartifacts.azureedge.net/onprem/$Platform"
+    $PlatformUrl = "https://bcartifacts.azureedge.net/onprem/$Version/platform"
     Write-Verbose "Using platform url $PlatformUrl"
 
-    Invoke-WebRequest -Uri $PlatFormUrl -OutFile (Join-Path -Path $Directory -ChildPath dummy)
-    # Expand-FileFromZipArchive -Uri https://bcartifacts.azureedge.net/sandbox/$Platform
+    Expand-FileFromZipArchive -Uri https://bcartifacts.azureedge.net/sandbox/$Platform -
 
 
 
