@@ -25,28 +25,26 @@ function Get-BCSymbols
     $TempPath = [System.IO.Path]::GetTempPath()
     Write-Verbose "Using $TempPath as temporary file path"
 
-    $ManifestFileName = Join-Path -Path $TempPath -ChildPath manifest.json
-    Write-Verbose "Using manifest $ManifestFileName"
+    $ManifestFilePath = Join-Path -Path $TempPath -ChildPath manifest.json
+    Write-Verbose "Using manifest $ManifestFilePath"
 
-    if (Test-Path -Path $ManifestFileName) { Remove-Item -Path $ManifestFileName -Force }
+    if (Test-Path -Path $ManifestFilePath) { Remove-Item -Path $ManifestFilePath -Force }
 
     Write-Verbose "Extract manifest.json from $ArtifactUrl"
     Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath manifest.json -Destination $TempPath
 
-    $Version = Get-Content -Path $ManifestFileName | ConvertFrom-Json | Select-Object -ExpandProperty Version
+    $Manifest = Get-Content -Path $ManifestFilePath | ConvertFrom-Json
+    $Version = $Manifest | Select-Object -ExpandProperty Version
+    $IsSandbox = $Manifest | Select-Object -ExpandProperty isBcSandbox
+    $Target = $IsSandbox ? 'sandbox' : 'onprem'
     Write-Verbose "Using platform $Version"
+    Write-Verbose "Target is $Target"
 
-    $PlatformUrl = "https://bcartifacts.azureedge.net/onprem/$Version/platform"
+    $PlatformUrl = "https://bcartifacts.azureedge.net/$Target/$Version/platform"
     Write-Verbose "Using platform url $PlatformUrl"
 
-    Expand-FileFromZipArchive -Uri https://bcartifacts.azureedge.net/sandbox/$Platform -
-
-
-
-
-    <#
-		download  https://bcartifacts.azureedge.net/sandbox/$versie uit manifest/platform
-				sandbox\23.1.13431.14265\platform\ModernDev\program files\Microsoft Dynamics NAV\230\AL Development Environment\System.app"
-    #>
-
+    Expand-FileFromZipArchive `
+        -Uri $PlatformUrl `
+        -ZipEntryPath 'ModernDev/program files/Microsoft Dynamics NAV/230/AL Development Environment/System.app' `
+        -Destination $Directory
 }
