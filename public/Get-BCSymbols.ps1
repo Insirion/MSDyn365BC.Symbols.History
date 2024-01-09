@@ -14,10 +14,15 @@ function Get-BCSymbols
         [string]$Directory = '.'
     )
 
-    $AppFilePaths =
-    'Applications\BaseApp\Source\Microsoft_Base Application.app',
-    'Applications\Application\Source\Microsoft_Application.app',
-    'Applications\system application\source\Microsoft_System Application.app'
+    $AppFilePatterns =
+    'Applications*Microsoft_Base Application*.app',
+    'Applications*Microsoft_Application*.app',
+    'Applications*Microsoft_System Application*.app'
+
+    Write-Verbose 'Finding apps files in artifact'
+    $FilesInArtifact = Expand-FileFromZipArchive -Uri $ArtifactUrl -ListOnly
+    $AppFilePaths = $AppFilePatterns | ForEach-Object { $FilesInArtifact -like $_ }
+    Write-Verbose "Found $($AppFilePaths -join ', ')"
 
     Write-Verbose 'Download and Extract Base Application, Application and System Application apps'
     Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath $AppFilePaths -Destination $Directory
@@ -35,8 +40,7 @@ function Get-BCSymbols
 
     $Manifest = Get-Content -Path $ManifestFilePath | ConvertFrom-Json
     $Version = $Manifest | Select-Object -ExpandProperty Version
-    $IsSandbox = $Manifest | Select-Object -ExpandProperty isBcSandbox
-    $Target = $IsSandbox ? 'sandbox' : 'onprem'
+    $Target = $Manifest.isBcSandbox ? 'sandbox' : 'onprem'
     Write-Verbose "Using platform $Version"
     Write-Verbose "Target is $Target"
 
