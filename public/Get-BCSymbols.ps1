@@ -22,10 +22,11 @@ function Get-BCSymbols
     Write-Verbose 'Finding apps files in artifact'
     $FilesInArtifact = Expand-FileFromZipArchive -Uri $ArtifactUrl -ListOnly
     $AppFilePaths = $AppFilePatterns | ForEach-Object { $FilesInArtifact -like $_ }
+    $AppFilePaths = $AppFilePaths -notlike '*Test*'
     Write-Verbose "Found $($AppFilePaths -join ', ')"
 
     Write-Verbose 'Download and Extract Base Application, Application and System Application apps'
-    Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath $AppFilePaths -Destination $Directory
+    Expand-FileFromZipArchive -Uri $ArtifactUrl -ZipEntryPath $AppFilePaths -Destination $Directory -NoContainer
 
     $TempPath = [System.IO.Path]::GetTempPath()
     Write-Verbose "Using $TempPath as temporary file path"
@@ -50,5 +51,6 @@ function Get-BCSymbols
     Expand-FileFromZipArchive `
         -Uri $PlatformUrl `
         -ZipEntryPath 'ModernDev/program files/Microsoft Dynamics NAV/230/AL Development Environment/System.app' `
-        -Destination $Directory
+        -Destination $Directory `
+        -NoContainer
 }
