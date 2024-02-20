@@ -20,7 +20,7 @@ function Get-BCSymbols
     'Applications*Microsoft_System Application*.app'
 
     Write-Verbose 'Finding apps files in artifact'
-    $FilesInArtifact = Expand-FileFromZipArchive -Uri $ArtifactUrl -ListOnly
+    $FilesInArtifact = Expand-FileFromZipArchive -Uri $ArtifactUrl -ListOnly | Select-Object -ExpandProperty FileName
     $AppFilePaths = $AppFilePatterns | ForEach-Object { $FilesInArtifact -like $_ }
     $AppFilePaths = $AppFilePaths -notlike '*Test*'
     Write-Verbose "Found $($AppFilePaths -join ', ')"
