@@ -50,7 +50,6 @@ function Get-BCSymbols
 
     Expand-FileFromZipArchive `
         -Uri $PlatformUrl `
-        -CentralDirSize 1mb `
         -ZipEntryPath 'ModernDev\program files\Microsoft Dynamics NAV\230\AL Development Environment\System.app' `
         -Destination $Directory `
         -NoContainer
