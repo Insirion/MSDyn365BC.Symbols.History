@@ -20,7 +20,7 @@ function Get-BCSymbols
     'Applications*Microsoft_System Application*.app'
 
     Write-Verbose 'Finding apps files in artifact'
-    $FilesInArtifact = Expand-FileFromZipArchive -Uri $ArtifactUrl -ListOnly
+    $FilesInArtifact = Expand-FileFromZipArchive -Uri $ArtifactUrl -ListOnly | Select-Object -ExpandProperty FileName
     $AppFilePaths = $AppFilePatterns | ForEach-Object { $FilesInArtifact -like $_ }
     $AppFilePaths = $AppFilePaths -notlike '*Test*'
     Write-Verbose "Found $($AppFilePaths -join ', ')"
@@ -50,7 +50,6 @@ function Get-BCSymbols
 
     Expand-FileFromZipArchive `
         -Uri $PlatformUrl `
-        -CentralDirSize 1mb `
         -ZipEntryPath 'ModernDev\program files\Microsoft Dynamics NAV\230\AL Development Environment\System.app' `
         -Destination $Directory `
         -NoContainer
