@@ -87,13 +87,13 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            # Tags = @()
+            Tags                       = @('microsoft', 'dynamics365', 'businesscentral', 'bc', 'symbols', 'al')
 
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri                 = 'https://raw.githubusercontent.com/Insirion/MSDyn365BC.Symbols.History/master/LICENSE'
 
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri                 = 'https://github.com/Insirion/MSDyn365BC.Symbols.History'
 
             # A URL to an icon representing this module.
             # IconUri = ''
@@ -108,7 +108,7 @@
             # RequireLicenseAcceptance = $false
 
             # External dependent modules of this module
-            # ExternalModuleDependencies = @()
+            ExternalModuleDependencies = @('UncommonSense.Zip.Utils')
 
         } # End of PSData hashtable
 
