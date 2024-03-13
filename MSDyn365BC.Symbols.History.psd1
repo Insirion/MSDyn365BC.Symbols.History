@@ -19,10 +19,10 @@
     CompanyName       = 'Insirion'
 
     # Copyright statement for this module
-    Copyright         = 'Copyright (c) 2023 Roy Banse/Jan Hoek'
+    Copyright         = 'Copyright (c) 2024 Roy Banse/Jan Hoek'
 
     # Description of the functionality provided by this module
-    # Description = ''
+    Description       = 'PowerShell module to download only symbols without downloading the whole artifact.'
 
     # Minimum version of the PowerShell engine required by this module
     # PowerShellVersion = ''
