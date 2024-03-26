@@ -17,11 +17,13 @@
             }
         },
         {
-            "label": "Choose country",
+            "label": "Get Symbols",
             "type": "shell",
-            "command": "echo",
+            "command": "pwsh",
             "args": [
-                "${input:country} ${input:version}"
+                "-File",
+                "getsymbols.ps1",
+                "'${input:country}'"
             ],
             "problemMatcher": []
         }
@@ -30,23 +32,11 @@
         {
             "type": "pickString",
             "id": "country",
-            "description": "Kies een land",
-            "default": "België",
+            "description": "Choose a country",
+            "default": "NL",
             "options": [
-                "Nederland",
-                "België"
-            ]
-        },
-        {
-            "type": "pickString",
-            "id": "version",
-            "description": "Kies een versie",
-            "default": "23.0",
-            "options": [
-                "21.0",
-                "22.0",
-                "23.0",
-                "23.1"
+                "NL",
+                "BE"
             ]
         }
     ]
