@@ -15,6 +15,39 @@
                 "kind": "test",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Choose country",
+            "type": "shell",
+            "command": "echo",
+            "args": [
+                "${input:country} ${input:version}"
+            ],
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "country",
+            "description": "Kies een land",
+            "default": "België",
+            "options": [
+                "Nederland",
+                "België"
+            ]
+        },
+        {
+            "type": "pickString",
+            "id": "version",
+            "description": "Kies een versie",
+            "default": "23.0",
+            "options": [
+                "21.0",
+                "22.0",
+                "23.0",
+                "23.1"
+            ]
         }
     ]
 }
