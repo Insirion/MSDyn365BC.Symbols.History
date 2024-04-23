@@ -57,5 +57,5 @@ function Get-BCSymbols
     Write-Verbose "Found $($AppFilePaths -join ', ')"
 
     Write-Verbose 'Download and Extract Base Application, Application and System Application apps'
-    Expand-FileFromZipArchive -Uri $PlatformUrl -ZipEntryPath $AppFilePaths -Destination $Directory -NoContainer -CentralDirSize 20mb
+    Expand-FileFromZipArchive -Uri $PlatformUrl -ZipEntryPath $AppFilePaths -Destination $Directory -NoContainer -CentralDirSize 1mb
 }
