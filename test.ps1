@@ -1,5 +1,5 @@
-Remove-Item ~/Desktop/onprem -ErrorAction SilentlyContinue
-Remove-Item ~/Desktop/sandbox -ErrorAction SilentlyContinue
+Remove-Item ~/Desktop/onprem -ErrorAction SilentlyContinue -Recurse
+Remove-Item ~/Desktop/sandbox -ErrorAction SilentlyContinue -Recurse
 
 $ErrorActionPreference = 'Stop'
 
