@@ -1,3 +1,6 @@
+Remove-Item ~/Desktop/onprem -ErrorAction SilentlyContinue
+Remove-Item ~/Desktop/sandbox -ErrorAction SilentlyContinue
+
 $ErrorActionPreference = 'Stop'
 
 Get-Module -ListAvailable UncommonSense.Zip.Utils | Import-Module -Force
