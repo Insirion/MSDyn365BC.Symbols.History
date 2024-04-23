@@ -45,13 +45,17 @@ function Get-BCSymbols
     Write-Verbose "Using platform $Version"
     Write-Verbose "Target is $Target"
 
-    $PlatformUrl = "https://bcartifacts.azureedge.net/$Target/$Version/platform"
+    $PlatformUrl = "https://bcartifacts-exdbf9fwegejdqak.b02.azurefd.net/$Target/$Version/platform"
     Write-Verbose "Using platform url $PlatformUrl"
 
-    Expand-FileFromZipArchive `
-        -Uri $PlatformUrl `
-        -CentralDirSize 1mb `
-        -ZipEntryPath 'ModernDev\program files\Microsoft Dynamics NAV\230\AL Development Environment\System.app' `
-        -Destination $Directory `
-        -NoContainer
+    $AppFilePatterns = 'ModernDev\program files\Microsoft Dynamics NAV\*\AL Development Environment\System.app'
+
+    Write-Verbose 'Finding apps files in artifact'
+    $FilesInArtifact = Expand-FileFromZipArchive -Uri $PlatformUrl -ListOnly | Select-Object -ExpandProperty FileName
+    $AppFilePaths = $AppFilePatterns | ForEach-Object { $FilesInArtifact -like $_ }
+    $AppFilePaths = $AppFilePaths -notlike '*Test*'
+    Write-Verbose "Found $($AppFilePaths -join ', ')"
+
+    Write-Verbose 'Download and Extract Base Application, Application and System Application apps'
+    Expand-FileFromZipArchive -Uri $PlatformUrl -ZipEntryPath $AppFilePaths -Destination $Directory -NoContainer -CentralDirSize 20mb
 }
